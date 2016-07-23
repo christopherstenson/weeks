@@ -75,35 +75,44 @@
     </style>
     <script>
       function eval() {
-        var birthday = $('#bday').val();
-        var age = Math.round($('#age').val());
-        var deathday = new Date(birthday);
+        var birthday, age, deathday, today;
+        var dotOutput = '', textOutput = '';
+
+        birthday = new Date($('#bday').val());
+        age = Math.round($('#age').val());
+        deathday = new Date(birthday);
+        today = new Date();
+
         deathday.setFullYear(deathday.getFullYear() + age);
 
-        if (deathday < birthday || deathday < today || age < 0) return 0;
-
-        var today = new Date();
-
-        var differenceInMil = deathday - today;
-        var differenceInWks = ((((differenceInMil / 1000) / 60) / 60) / 24) / 7;
-        var differenceInWksInt = Math.round(differenceInWks);
-        differenceInWksInt < 0 ? 0 : differenceInWksInt;
-
-        var output = '';
-
-        if (differenceInWksInt > 10000)
+        if (birthday > deathday || 0 > age)
         {
-          output = 'C\'mon, nobody is going to live that long just yet.'
+          textOutput = '<span class="text-danger">You can\'t live for negative years!</span>';
+          dotOutput = '';
+        }
+        else if (today > deathday)
+        {
+          textOutput = '<h2>0 <small class="text-muted">weeks left</small></h2>';
+          dotOutput = '';
         }
         else
         {
+          var differenceInMil, differenceInWks, differenceInWksInt;
+
+          differenceInMil = deathday - today;
+          differenceInWks = ((((differenceInMil / 1000) / 60) / 60) / 24) / 7;
+          differenceInWksInt = Math.round(differenceInWks);
+          differenceInWksInt < 0 ? 0 : differenceInWksInt;
+
+          textOutput = '<h2>' + differenceInWksInt + ' <small class="text-muted">weeks left</small></h2>';
           for (var i = 0; i <= differenceInWksInt; i++)
           {
-            output += '<div class="dot"></div>';
+            dotOutput += '<div class="dot"></div>';
           }
         }
 
-        $('#result').html(output);
+        $('#dot-result').html(dotOutput);
+        $('#text-result').html(textOutput);
       }
     </script>
   </head>
@@ -127,7 +136,10 @@
       <button class="btn btn-primary btn-block" onclick="eval();">Refresh</button>
     </div>
 
-    <div id="result" class="result pane">
+    <div class="result pane">
+      <div id="text-result"></div>
+      <hr>
+      <div id="dot-result"></div>
     </div>
 
     <footer>
