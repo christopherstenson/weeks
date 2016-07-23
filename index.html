@@ -91,9 +91,16 @@
 
         var output = '';
 
-        for (var i = 0; i <= differenceInWksInt; i++)
+        if (differenceInWksInt > 10000)
         {
-          output += '<div class="dot"></div>';
+          output = 'C\'mon, nobody is going to live that long just yet.'
+        }
+        else
+        {
+          for (var i = 0; i <= differenceInWksInt; i++)
+          {
+            output += '<div class="dot"></div>';
+          }
         }
 
         $('#result').html(output);
