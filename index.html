@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <title>Weeks of your life</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--
+      Hi fellow developer / person who erroneously pressed Ctrl + U!
+
+      I know you could do this better than I did it. I was shooting for speed of
+      development, and so I went with the tools I've been using lately and tried
+      to make it simple. It could be done smaller, faster, smoother, and with no
+      external dependencies, I know.
+
+      The beautiful thing about web development is that there are a million ways
+      to do something. This isn't the best, so I'd love to see your take.
+
+      twitter.com/serebroraya
+    -->
+    <style>
+      h1 {
+        font-size: 200%;
+      }
+
+      .pane {
+        margin: 20px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        background-color: #fefefe;
+      }
+
+      .input {
+        padding: 20px;
+        width: 90%;
+        max-width: 250px;
+        float: left;
+      }
+
+      .result {
+        padding: 10px;
+        float: left;
+        width: 90%;
+        max-width: 700px;
+      }
+
+      .year {
+        margin: 5px 0;
+        height: 15px;
+        width: 100%;
+      }
+
+      .dot {
+        width: 3px;
+        height: 3px;
+        border: 3px solid black;
+        border-radius: 3px;
+        float: left;
+        margin: 5px;
+      }
+
+      .form-control {
+        margin-bottom: 20px;
+      }
+
+      footer {
+        width: 90%;
+        height: 100px;
+        padding: 20px;
+        border-top: 1px solid #fefefe;s
+        text-align: center;
+        font-size: 75%;
+        margin: 0 auto;
+        float: left;
+      }
+    </style>
+    <script>
+      function eval() {
+        var birthday = $('#bday').val();
+        var age = Math.round($('#age').val());
+        var deathday = new Date(birthday);
+        deathday.setFullYear(deathday.getFullYear() + age);
+
+        var today = new Date();
+
+        var differenceInMil = deathday - today;
+        var differenceInWks = ((((differenceInMil / 1000) / 60) / 60) / 24) / 7;
+        var differenceInWksInt = Math.round(differenceInWks);
+        differenceInWksInt < 0 ? 0 : differenceInWksInt;
+
+        var output = '<div class="year">';
+
+        for (var i = 0; i <= differenceInWksInt; i++)
+        {
+          output += '<div class="dot"></div>';
+        }
+        console.log(output);
+        $('#result').html(output);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="input pane">
+      <h1>How many weeks do you have left?</h1>
+      <p>
+          On average in the US, a person can expect to live 79 years. Women typically live for
+          82 years. Men typically live for 77.
+      </p>
+      <p>
+        Input your birthday and this site will show you how many weeks you have
+        left to live, on average. You may wish to adjust the age of your death
+        to experiment with
+        <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different indexes.</a>
+      </p>
+      <label for="bday">Birthday</label>
+      <input class="form-control" type="date" id="bday"/>
+      <label for="age">Age at death</label>
+      <input class="form-control" type="number" id="age" value="79"/>
+      <button class="btn btn-primary btn-block" onclick="eval();">Refresh</button>
+    </div>
+
+    <div id="result" class="result pane">
+    </div>
+
+    <footer>
+      <p>
+        Life Expectancy Figures rounded from WHO data, available
+        <a href="http://www.who.int/gho/publications/world_health_statistics/2016/Annex_B/en/">here.</a>
+      </p>
+      <p>
+        Made with <a href="http://jquery.com/">jQuery</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.
+      </p>
+      <p>
+        Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
+      </p>
+    </footer>
+  </body>
+</html>
