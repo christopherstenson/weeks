@@ -80,7 +80,7 @@
         var deathday = new Date(birthday);
         deathday.setFullYear(deathday.getFullYear() + age);
 
-        if (deathday < birthday || deathday < today) return 0;
+        if (deathday < birthday || deathday < today || age < 0) return 0;
 
         var today = new Date();
 
@@ -95,7 +95,7 @@
         {
           output += '<div class="dot"></div>';
         }
-        
+
         $('#result').html(output);
       }
     </script>
@@ -116,7 +116,7 @@
       <label for="bday">Birthday</label>
       <input class="form-control" type="date" id="bday"/>
       <label for="age">Age at death</label>
-      <input class="form-control" type="number" id="age" value="79"/>
+      <input class="form-control" type="number" id="age" value="79" min="0"/>
       <button class="btn btn-primary btn-block" onclick="eval();">Refresh</button>
     </div>
 
