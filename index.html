@@ -80,6 +80,8 @@
         var deathday = new Date(birthday);
         deathday.setFullYear(deathday.getFullYear() + age);
 
+        if (deathday < birthday || deathday < today) return 0;
+
         var today = new Date();
 
         var differenceInMil = deathday - today;
@@ -87,13 +89,13 @@
         var differenceInWksInt = Math.round(differenceInWks);
         differenceInWksInt < 0 ? 0 : differenceInWksInt;
 
-        var output = '<div class="year">';
+        var output = '';
 
         for (var i = 0; i <= differenceInWksInt; i++)
         {
           output += '<div class="dot"></div>';
         }
-        console.log(output);
+        
         $('#result').html(output);
       }
     </script>
