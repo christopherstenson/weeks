@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Weeks of your life</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -23,24 +24,19 @@
       }
 
       .pane {
-        margin: 20px;
         border: 1px solid #eee;
         border-radius: 5px;
         background-color: #fefefe;
+        margin: 20px;
       }
 
       .input {
         padding: 20px;
-        width: 90%;
-        max-width: 250px;
-        float: left;
       }
 
       .result {
         padding: 10px;
-        float: left;
-        width: 90%;
-        max-width: 700px;
+        display: none;
       }
 
       .year {
@@ -49,13 +45,11 @@
         width: 100%;
       }
 
-      .dot {
-        width: 3px;
-        height: 3px;
-        border: 3px solid black;
-        border-radius: 3px;
-        float: left;
-        margin: 5px;
+      #dot-result {
+        word-wrap: break-word;
+        font-size: 28px;
+        line-height: 15px;
+        letter-spacing: 5px;
       }
 
       .form-control {
@@ -63,14 +57,9 @@
       }
 
       footer {
-        width: 90%;
-        height: 100px;
         padding: 20px;
-        border-top: 1px solid #fefefe;s
-        text-align: center;
+        border-top: 1px solid #fefefe;
         font-size: 75%;
-        margin: 0 auto;
-        float: left;
       }
     </style>
     <script>
@@ -85,14 +74,19 @@
 
         deathday.setFullYear(deathday.getFullYear() + age);
 
-        if (birthday > deathday || 0 > age)
+        if (Object.prototype.toString.call(birthday) !== "[object Date]" || isNaN(birthday.getTime()))
         {
-          textOutput = '<span class="text-danger">You can\'t live for negative years!</span>';
+          textOutput = error('That doesn\'t look like a birthday!');
+          dotOutput = '';
+        }
+        else if (birthday > deathday || 0 > age)
+        {
+          textOutput = error('You can\'t live for negative years!');
           dotOutput = '';
         }
         else if (today > deathday)
         {
-          textOutput = '<h2>0 <small class="text-muted">weeks left</small></h2>';
+          textOutput = textResult(0);
           dotOutput = '';
         }
         else
@@ -104,55 +98,100 @@
           differenceInWksInt = Math.round(differenceInWks);
           differenceInWksInt < 0 ? 0 : differenceInWksInt;
 
-          textOutput = '<h2>' + differenceInWksInt + ' <small class="text-muted">weeks left</small></h2>';
+          textOutput = textResult(differenceInWksInt);
           for (var i = 0; i <= differenceInWksInt; i++)
           {
-            dotOutput += '<div class="dot"></div>';
+            dotOutput += '&bull;';
           }
         }
 
         $('#dot-result').html(dotOutput);
         $('#text-result').html(textOutput);
+        $('#result').slideDown();
+      }
+
+      function textResult(number)
+      {
+        return '<h2>' +
+                 number +
+               ' <small class="text-muted">weeks left</small>' +
+               '</h2>';
+      }
+
+      function error(text)
+      {
+        return '<h2 class="text-danger">' +
+                 getErrorHeader() +
+               '</h2>' +
+               '<small class="text-muted text-danger">' +
+                 text +
+               '</small>';
+
+      }
+
+      function getErrorHeader()
+      {
+        var errors = [
+          "Uh-oh!",
+          ":(",
+          "Oops.",
+          "Yikes!",
+          "...",
+          "Houston, we have a problem.",
+          "Danger, Will Robinson!",
+          "Error!",
+          "PEBCAK?",
+          "That's an error."
+        ];
+
+        return errors[Math.floor(Math.random() * errors.length)];
       }
     </script>
   </head>
   <body>
-    <div class="input pane">
-      <h1>How many weeks do you have left?</h1>
-      <p>
-          On average in the US, a person can expect to live 79 years. Women typically live for
-          82 years. Men typically live for 77.
-      </p>
-      <p>
-        Input your birthday and this site will show you how many weeks you have
-        left to live, on average. You may wish to adjust the age you are at death
-        to experiment with
-        <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different values.</a>
-      </p>
-      <label for="bday">Birthday</label>
-      <input class="form-control" type="date" id="bday"/>
-      <label for="age">Age at death</label>
-      <input class="form-control" type="number" id="age" value="79" min="0"/>
-      <button class="btn btn-primary btn-block" onclick="eval();">Refresh</button>
-    </div>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+          <div class="input pane">
+            <h1>How many weeks do you have left?</h1>
+            <p>
+                On average in the US, a person can expect to live 79 years. Women typically live for
+                82 years. Men typically live for 77.
+            </p>
+            <p>
+              Input your birthday and this site will show you how many weeks you have
+              left to live, on average. You may wish to adjust the age you are at death
+              to experiment with
+              <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different values.</a>
+            </p>
+            <label for="bday">Birthday</label>
+            <input class="form-control" type="date" id="bday" oninput="eval()"/>
+            <label for="age">Age at death</label>
+            <input class="form-control" type="number" id="age" value="79" min="0" oninput="eval()"/>
+          </div>
+        </div>
 
-    <div class="result pane">
-      <div id="text-result"></div>
-      <hr>
-      <div id="dot-result"></div>
-    </div>
+        <div class="col-lg-8 col-md-8 col-xs-12">
+          <div id="result" class="result pane">
+            <div id="text-result"></div>
+            <hr>
+            <div id="dot-result"></div>
+          </div>
+        </div>
+      </div>
 
-    <footer>
-      <p>
-        Life Expectancy Figures rounded from WHO data, available
-        <a href="http://www.who.int/gho/publications/world_health_statistics/2016/Annex_B/en/">here.</a>
-      </p>
-      <p>
-        Made with <a href="http://jquery.com/">jQuery</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.
-      </p>
-      <p>
-        Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
-      </p>
-    </footer>
+      <footer>
+        <p>
+          Life Expectancy Figures rounded from WHO data, available
+          <a href="http://www.who.int/gho/publications/world_health_statistics/2016/Annex_B/en/">here.</a>
+        </p>
+        <p>
+          Made with <a href="http://jquery.com/">jQuery</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.
+        </p>
+        <p>
+          Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
+        </p>
+      </footer>
+    </div>
   </body>
 </html>
