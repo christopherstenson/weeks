@@ -105,6 +105,11 @@
         }
         else
         {
+          if (birthday > today)
+          {
+            today = birthday;
+          }
+          
           var differenceInMil, differenceInWks, differenceInWksInt;
 
           differenceInMil = deathday - today;
