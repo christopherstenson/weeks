@@ -6,49 +6,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--
       Hi fellow developer / person who erroneously pressed Ctrl + U!
-
       I know you could do this better than I did it. I was shooting for speed of
       development, and so I went with the tools I've been using lately and tried
       to make it simple. It could be done smaller, faster, smoother, and with no
       external dependencies, I know.
-
       The beautiful thing about web development is that there are a million ways
       to do something. This isn't the best, so I'd love to see your take.
-
       twitter.com/serebroraya
     -->
     <style>
       h1 {
         font-size: 200%;
       }
-
       .pane {
         margin: 20px;
         border: 1px solid #eee;
         border-radius: 5px;
         background-color: #fefefe;
       }
-
       .input {
         padding: 20px;
         width: 90%;
         max-width: 250px;
         float: left;
       }
-
       .result {
         padding: 10px;
         float: left;
         width: 90%;
         max-width: 700px;
       }
-
       .year {
         margin: 5px 0;
         height: 15px;
         width: 100%;
       }
-
       .dot {
         width: 3px;
         height: 3px;
@@ -57,11 +49,17 @@
         float: left;
         margin: 5px;
       }
-
+      .smalldot {
+        width: 1px;
+        height: 1px;
+        border: 1px solid black;
+        border-radius: 1px;
+        float: left;
+        margin: 2px;
+      }
       .form-control {
         margin-bottom: 20px;
       }
-
       footer {
         width: 90%;
         height: 100px;
@@ -79,18 +77,13 @@
         var age = Math.round($('#age').val());
         var deathday = new Date(birthday);
         deathday.setFullYear(deathday.getFullYear() + age);
-
         if (deathday < birthday || deathday < today || age < 0) return 0;
-
         var today = new Date();
-
         var differenceInMil = deathday - today;
         var differenceInWks = ((((differenceInMil / 1000) / 60) / 60) / 24) / 7;
         var differenceInWksInt = Math.round(differenceInWks);
         differenceInWksInt < 0 ? 0 : differenceInWksInt;
-
         var output = '';
-
         if (differenceInWksInt > 10000)
         {
           output = 'C\'mon, nobody is going to live that long just yet.'
@@ -102,20 +95,44 @@
             output += '<div class="dot"></div>';
           }
         }
-
+        $('#result').html(output);
+      }
+      function dayeval() {
+        var birthday = $('#bday').val();
+        var age = Math.round($('#age').val());
+        var deathday = new Date(birthday);
+        deathday.setFullYear(deathday.getFullYear() + age);
+        if (deathday < birthday || deathday < today || age < 0) return 0;
+        var today = new Date();
+        var differenceInMil = deathday - today;
+        var differenceInDys = ((((differenceInMil / 1000) / 60) / 60) / 24);
+        var differenceInDysInt = Math.round(differenceInDys);
+        differenceInDysInt < 0 ? 0 : differenceInDysInt;
+        var output = '';
+        if (differenceInDysInt > 70000)
+        {
+          output = 'C\'mon, nobody is going to live that long just yet.'
+        }
+        else
+        {
+          for (var i = 0; i <= differenceInDysInt; i++)
+          {
+            output += '<div class="smalldot"></div>';
+          }
+        }
         $('#result').html(output);
       }
     </script>
   </head>
   <body>
     <div class="input pane">
-      <h1>How many weeks do you have left?</h1>
+      <h1>How many weeks/days do you have left?</h1>
       <p>
           On average in the US, a person can expect to live 79 years. Women typically live for
           82 years. Men typically live for 77.
       </p>
       <p>
-        Input your birthday and this site will show you how many weeks you have
+        Input your birthday and this site will show you how many weeks/days you have
         left to live, on average. You may wish to adjust the age of your death
         to experiment with
         <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different indexes.</a>
@@ -124,7 +141,8 @@
       <input class="form-control" type="date" id="bday"/>
       <label for="age">Age at death</label>
       <input class="form-control" type="number" id="age" value="79" min="0"/>
-      <button class="btn btn-primary btn-block" onclick="eval();">Refresh</button>
+      <button class="btn btn-primary btn-block" onclick="eval();">Weeks</button>
+      <button class="btn btn-primary btn-block" onclick="dayeval();">Days</button>
     </div>
 
     <div id="result" class="result pane">
@@ -139,7 +157,7 @@
         Made with <a href="http://jquery.com/">jQuery</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.
       </p>
       <p>
-        Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
+        Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a> and <a href="https://github.com/Chases5">Chase Skelton<a/>.
       </p>
     </footer>
   </body>
