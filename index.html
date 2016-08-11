@@ -56,9 +56,22 @@
 
       #dot-result {
         word-wrap: break-word;
-        font-size: 28px;
         line-height: 15px;
         letter-spacing: 5px;
+      }
+      #dot-result.days {
+        font-size: 14px;
+        line-height: 6px;
+        letter-spacing: 2px;
+      }
+      #dot-result.weeks {
+        font-size: 28px;
+      }
+      #dot-result.years {
+        font-size: 36px;
+      }
+      #dot-result.decades {
+        font-size: 48px;
       }
 
       .form-control {
@@ -152,7 +165,7 @@
           }
         }
 
-        $('#dot-result').html(dotOutput);
+        $('#dot-result').html(dotOutput).removeClass().addClass(unit);
         $('#text-result').html(textOutput);
         $('#result').slideDown();
       }
