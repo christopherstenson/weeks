@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="twitter:title" property="og:title" content="Weeks of your life">
+    <meta name="twitter:title" property="og:title" content="How much time do you have left?">
     <meta property="og:url" content="https://christopherstenson.github.io/weeks/">
     <meta property="og:type" content="website" />
     <meta name="twitter:card" property="og:image" content="https://christopherstenson.github.io/weeks/og-image.png?v=02" />
     <meta property="fb:app_id" content="1038536892921143" />
-    <meta name="description" property="og:description" content="How much time do you have left, on average? Visualize each week.">
+    <meta name="description" property="og:description" content="How much time do you have left, on average? Visualize it.">
     <meta name="twitter:creator" content="@SerebroRaya">
     <meta name="twitter:site" content="@SerebroRaya">
-    <title>Weeks of your life</title>
+    <title>How much time do you have left?</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -56,9 +56,22 @@
 
       #dot-result {
         word-wrap: break-word;
-        font-size: 28px;
         line-height: 15px;
         letter-spacing: 5px;
+      }
+      #dot-result.days {
+        font-size: 14px;
+        line-height: 6px;
+        letter-spacing: 2px;
+      }
+      #dot-result.weeks {
+        font-size: 28px;
+      }
+      #dot-result.years {
+        font-size: 36px;
+      }
+      #dot-result.decades {
+        font-size: 48px;
       }
 
       .form-control {
@@ -78,11 +91,18 @@
     </style>
     <script>
       function eval() {
-        var birthday, age, deathday, today;
+        var unit, birthday, age, deathday, today;
         var dotOutput = '', textOutput = '';
 
+        unit = $('#unit').val();
         birthday = new Date($('#bday').val());
         age = Math.round($('#age').val());
+
+        // Validation: if not every form input has something, don't do the math
+        if (!age || !birthday || !unit) {
+          return;
+        }
+
         deathday = new Date(birthday);
         today = new Date();
 
@@ -109,31 +129,52 @@
           {
             today = birthday;
           }
-          
-          var differenceInMil, differenceInWks, differenceInWksInt;
 
-          differenceInMil = deathday - today;
-          differenceInWks = ((((differenceInMil / 1000) / 60) / 60) / 24) / 7;
-          differenceInWksInt = Math.round(differenceInWks);
-          differenceInWksInt < 0 ? 0 : differenceInWksInt;
+          var differenceInMil, difference, differenceAsInt;
 
-          textOutput = textResult(differenceInWksInt);
-          for (var i = 0; i <= differenceInWksInt; i++)
+          difference = deathday - today;
+
+          switch (unit)
+          {
+            case "decades":
+              difference = difference / 10;
+            case "years":
+              difference = difference / 52;
+            case "weeks":
+              difference = difference / 7;
+            case "days":
+              difference = difference / 24;
+            case "hours":
+              difference = difference / 60;
+            case "minutes":
+              difference = difference / 60;
+            case "seconds":
+              difference = difference / 1000;
+              break;
+            default:
+              error("No unit was selected.");
+          }
+
+          differenceAsInt = Math.round(difference);
+          differenceAsInt < 0 ? 0 : differenceAsInt;
+
+          textOutput = textResult(differenceAsInt, unit);
+          for (var i = 0; i < differenceAsInt; i++)
           {
             dotOutput += '&bull;';
           }
         }
 
-        $('#dot-result').html(dotOutput);
+        $('#dot-result').html(dotOutput).removeClass().addClass(unit);
         $('#text-result').html(textOutput);
         $('#result').slideDown();
       }
 
-      function textResult(number)
+      function textResult(number, unit)
       {
         return '<h2>' +
                  number +
-               ' <small class="text-muted">weeks left</small>' +
+               ' <small class="text-muted">' + unit + ' left</small>' +
                '</h2>';
       }
 
@@ -145,7 +186,6 @@
                '<small class="text-muted text-danger">' +
                  text +
                '</small>';
-
       }
 
       function getErrorHeader()
@@ -180,17 +220,24 @@
       <div class="row">
         <div class="col-lg-3 col-md-4 col-xs-12">
           <div class="input pane">
-            <h1>How many weeks do you have left?</h1>
+            <h1>How much time do you have left?</h1>
             <p>
                 On average in the US, a person can expect to live 79 years. Women typically live for
                 82 years. Men typically live for 77.
             </p>
             <p>
-              Input your birthday and this site will show you how many weeks you have
-              left to live, on average. You may wish to adjust the age you are at death
-              to experiment with
-              <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different values.</a>
+              Input your birthday and this site will show you how long you have
+              left to live, on average. You may wish to adjust the units that are shown,
+              or perhaps the age you are at death (to experiment with
+              <a href="https://en.wikipedia.org/wiki/List_of_countries_by_life_expectancy">different values).</a>
             </p>
+            <label for="unit">Unit</label>
+            <select class="form-control" id="unit" oninput="eval()">
+              <option value="days">days</option>
+              <option selected value="weeks">weeks</option>
+              <option value="years">years</option>
+              <option value="decades">decades</option>
+            </select>
             <label for="bday">Birthday</label>
             <input class="form-control" type="date" id="bday" oninput="eval()"/>
             <label for="age">Age at death</label>
@@ -220,7 +267,7 @@
           Made with <a href="http://jquery.com/">jQuery</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.
         </p>
         <p>
-          Created by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
+          Created and maintained by <a href="https://twitter.com/SerebroRaya">Chris Stenson</a>.
         </p>
       </footer>
     </div>
